@@ -19,6 +19,7 @@ def webhook():
     content = request.json  
     if content:
         event = content["event"]
+        app.logger.info("Invoice Status: " + event["log"]["invoice"]["status"])
         if event["subscription"] == "invoice" and event["log"]["invoice"]["status"] == "paid":
             app.logger.info("Received paid invoice")
             app.logger.info(content)
@@ -26,6 +27,8 @@ def webhook():
             TransferCreator(amount=amount)
     else:
         app.logger.info(f"Received raw data: {request.data.decode('utf-8')}")
+    return jsonify({"message": "received"}), 200
+
 
 @app.route('/create-invoices', methods=['POST'])
 def create_invoices():
