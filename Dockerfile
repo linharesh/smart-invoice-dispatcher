@@ -8,9 +8,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-COPY server.crt /app/server.crt
-COPY server.key /app/server.key
-
 
 ENV FLASK_APP=src.server:app
 ENV FLASK_ENV=production

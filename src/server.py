@@ -7,6 +7,7 @@ from threading import Thread
 from src.transfer import TransferCreator
 from src.invoice_creator import InvoiceCreator
 import ssl
+import os
 
 
 # Set up logging
@@ -67,7 +68,14 @@ def run_scheduler_in_background():
 if __name__ == "__main__":
     run_scheduler_in_background()
     
+    cert_file = 'server.crt'
+    key_file = 'server.key'
+    
+    if not os.path.exists(cert_file) or not os.path.exists(key_file):
+        logging.error(f"SSL certificate or key file not found: {cert_file}, {key_file}")
+        exit(1)
+    
     context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-    context.load_cert_chain('server.crt', 'server.key')
+    context.load_cert_chain(cert_file, key_file)
 
-    app.run(ssl_context=('server.crt', 'private.key'), host='0.0.0.0', port=5000)
+    app.run(ssl_context=(cert_file, key_file), host='0.0.0.0', port=5000)
