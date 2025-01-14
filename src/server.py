@@ -78,4 +78,4 @@ if __name__ == "__main__":
     context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
     context.load_cert_chain(cert_file, key_file)
 
-    app.run(ssl_context=(cert_file, key_file), host='0.0.0.0', port=443)
+    app.run(ssl_context=(cert_file, key_file), host='0.0.0.0')

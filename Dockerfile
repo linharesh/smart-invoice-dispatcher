@@ -16,4 +16,4 @@ ENV FLASK_ENV=production
 EXPOSE 443
 
 # Run the Flask app
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["flask", "run", "--host=0.0.0.0:443"]
