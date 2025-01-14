@@ -24,6 +24,10 @@ starkbank.Project(
     private_key=private_key_content
 )
 
+@app.route('/')
+def index():
+    return "server is running"
+
 @app.route('/webhook', methods=['POST'])
 def webhook():
     content = request.json  
@@ -61,4 +65,4 @@ def run_scheduler_in_background():
 if __name__ == "__main__":
     run_scheduler_in_background()
 
-    app.run()  
+    app.run()
