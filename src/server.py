@@ -1,13 +1,9 @@
-import time
-import schedule
 import logging
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import starkbank
-from threading import Thread
 from src.transfer import TransferCreator
 from src.invoice_creator import InvoiceCreator
 import os
-
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
@@ -44,36 +40,27 @@ def webhook():
             app.logger.info(content)
             amount = event["log"]["invoice"]["amount"]
             TransferCreator(amount=amount)
-
     else:
         app.logger.info(f"Received raw data: {request.data.decode('utf-8')}")
 
+@app.route('/create-invoices', methods=['POST'])
+def create_invoices():
+    data = request.json
+    if not data or 'amount' not in data:
+        return jsonify({"error": "Missing 'amount' in request body"}), 400
 
-def job():
-    logging.info("Generating invoice as part of scheduled task...")
+    amount = data['amount']
+    if not isinstance(amount, int) or amount <= 0:
+        return jsonify({"error": "'amount' must be a positive integer"}), 400
+
     invoice_creator = InvoiceCreator()
-    invoice_creator.create_invoices()
-
-
-def run_scheduler_for_24_hours():
-    # Schedule the job to run every hour
-    schedule.every(1).hour.do(job)
-
-    # Run the scheduler for 24 hours
-    for _ in range(24):
-        schedule.run_pending()
-        time.sleep(3600)  # Sleep for 1 hour (3600 seconds)
-
-
-def run_scheduler_in_background():
-    scheduler_thread = Thread(target=run_scheduler_for_24_hours)
-    scheduler_thread.daemon = True  
-    scheduler_thread.start()
-
+    try:
+        invoice_creator.create_invoices(amount)
+        return jsonify({"message": f"Successfully created {amount} invoices"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    run_scheduler_in_background()
-    
     cert_file = 'server.crt'
     key_file = 'server.key'
     
