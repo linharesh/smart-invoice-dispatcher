@@ -6,6 +6,8 @@ import starkbank
 from threading import Thread
 from src.transfer import TransferCreator
 from src.invoice_creator import InvoiceCreator
+import ssl
+
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
@@ -64,5 +66,8 @@ def run_scheduler_in_background():
 
 if __name__ == "__main__":
     run_scheduler_in_background()
+    
+    context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+    context.load_cert_chain('server.crt', 'server.key')
 
     app.run(ssl_context=('server.crt', 'private.key'), host='0.0.0.0', port=5000)
