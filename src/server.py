@@ -24,7 +24,8 @@ def webhook():
             app.logger.info("Received paid invoice")
             app.logger.info(content)
             amount = event["log"]["invoice"]["amount"]
-            TransferCreator(amount=amount)
+            transfer_creator = TransferCreator()
+            transfer_creator.create(amount)
     else:
         app.logger.info(f"Received raw data: {request.data.decode('utf-8')}")
     return jsonify({"message": "received"}), 200
