@@ -1,5 +1,6 @@
 import starkbank
 import logging
+from src.starkbank_auth import StarkBankAuth
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +19,10 @@ class TransferCreator:
         )
         
         try:
+            auth = StarkBankAuth()
+            user = auth.get_user()
+            starkbank.user = user
+
             transfer = starkbank.transfer.create(
                 [
                     starkbank.Transfer(

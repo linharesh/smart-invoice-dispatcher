@@ -10,22 +10,6 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 
 app = Flask(__name__)
 
-# Read private key from a file
-private_key_file = "private_key.pem"
-if not os.path.exists(private_key_file):
-    logging.error(f"Private key file not found: {private_key_file}")
-    exit(1)
-
-with open(private_key_file, "r") as file:
-    private_key_content = file.read()
-
-# for project users:
-starkbank.Project(
-    environment="sandbox",
-    id="5415638830940160",
-    private_key=private_key_content
-)
-
 @app.route('/')
 def index():
     return "server is running"

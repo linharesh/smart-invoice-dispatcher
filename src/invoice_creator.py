@@ -3,6 +3,7 @@ import logging
 import starkbank
 from src.name_generator import NameGenerator
 from src.tax_id_generator import TaxIdGenerator
+from src.starkbank_auth import StarkBankAuth
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +27,10 @@ class InvoiceCreator:
 
             logger.debug(f"Invoice details - Name: {name}, Tax ID: {tax_id}, Amount: {amount}")
 
+            auth = StarkBankAuth()
+            user = auth.get_user()
+            starkbank.user = user
+            
             invoice = starkbank.Invoice(
                 amount=amount,
                 name=name,
