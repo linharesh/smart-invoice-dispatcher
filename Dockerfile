@@ -16,4 +16,4 @@ ENV FLASK_ENV=production
 EXPOSE 443
 
 # Run the Flask app
-CMD ["gunicorn", "src.server:app", "--bind", "0.0.0.0:443", "--certfile=ssl.crt", "--keyfile=ssl.key", "--access-logfile", "-", "--error-logfile", "-", "--log-level", "info"]
+CMD ["gunicorn", "src.server:app", "--bind", "0.0.0.0:443", "--certfile=ssl.crt", "--keyfile=ssl.key", "--access-logfile", "-", "--error-logfile", "-", "--log-level", "info", "--preload"]
