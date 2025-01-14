@@ -65,4 +65,4 @@ def run_scheduler_in_background():
 if __name__ == "__main__":
     run_scheduler_in_background()
 
-    app.run()
+    app.run(ssl_context=('server.crt', 'private.key'), host='0.0.0.0', port=5000)
