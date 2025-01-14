@@ -12,7 +12,7 @@ ENV FLASK_APP=src.server:app
 ENV FLASK_ENV=development
 
 # Expose port 5000
-EXPOSE 80
+EXPOSE 5000
 
 # Run the Flask app
-CMD ["flask", "run", "--host=0.0.0.0:80"]
+CMD ["flask", "run", "--host=0.0.0.0"]
