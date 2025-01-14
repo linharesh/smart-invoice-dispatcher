@@ -1,8 +1,13 @@
 import random
+import logging
+
+logger = logging.getLogger(__name__)
 
 class NameGenerator:
     @staticmethod
     def generate_random_name():
+        logger.info("Generating a random name...")
+
         first_names = [
             "Miguel", "Sophia", "Arthur", "Alice", "Bernardo", "Julia", "Heitor", "Isabella",
             "Davi", "Manuela", "Lorenzo", "Laura", "Théo", "Luiza", "Pedro", "Valentina",
@@ -21,8 +26,13 @@ class NameGenerator:
             "Soares", "Vieira", "Cavalcanti", "Monteiro", "Moura", "Campos", "Freitas", "Barros"
         ]
 
+        # Randomly select components of the name
         first_name = random.choice(first_names)
         middle_initial = random.choice(middle_initials)
         last_name = random.choice(last_names)
 
-        return f"{first_name} {middle_initial} {last_name}"
+        # Construct the full name
+        full_name = f"{first_name} {middle_initial} {last_name}"
+        logger.info(f"Generated random name: {full_name}")
+
+        return full_name

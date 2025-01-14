@@ -6,7 +6,6 @@ import starkbank
 from threading import Thread
 from src.transfer import TransferCreator
 from src.invoice_creator import InvoiceCreator
-import ssl
 import os
 
 
@@ -15,10 +14,14 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 
 app = Flask(__name__)
 
-private_key_content = """
------BEGIN EC PRIVATE KEY-----
------END EC PRIVATE KEY-----
-"""
+# Read private key from a file
+private_key_file = "private_key.pem"
+if not os.path.exists(private_key_file):
+    logging.error(f"Private key file not found: {private_key_file}")
+    exit(1)
+
+with open(private_key_file, "r") as file:
+    private_key_content = file.read()
 
 # for project users:
 starkbank.Project(
@@ -46,21 +49,24 @@ def webhook():
         app.logger.info(f"Received raw data: {request.data.decode('utf-8')}")
 
 
-def schedule_invoices():
-    schedule.every(1).hour.do(job) 
-    
-    while True:
-        schedule.run_pending()
-        time.sleep(1) 
-
 def job():
     logging.info("Generating invoice as part of scheduled task...")
     invoice_creator = InvoiceCreator()
     invoice_creator.create_invoices()
 
 
+def run_scheduler_for_24_hours():
+    # Schedule the job to run every hour
+    schedule.every(1).hour.do(job)
+
+    # Run the scheduler for 24 hours
+    for _ in range(24):
+        schedule.run_pending()
+        time.sleep(3600)  # Sleep for 1 hour (3600 seconds)
+
+
 def run_scheduler_in_background():
-    scheduler_thread = Thread(target=schedule_invoices)
+    scheduler_thread = Thread(target=run_scheduler_for_24_hours)
     scheduler_thread.daemon = True  
     scheduler_thread.start()
 
@@ -74,8 +80,5 @@ if __name__ == "__main__":
     if not os.path.exists(cert_file) or not os.path.exists(key_file):
         logging.error(f"SSL certificate or key file not found: {cert_file}, {key_file}")
         exit(1)
-    
-#    context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-#    context.load_cert_chain(cert_file, key_file)
 
     app.run(host='0.0.0.0', port=5000, ssl_context=('ssl.crt', 'ssl.key'))
