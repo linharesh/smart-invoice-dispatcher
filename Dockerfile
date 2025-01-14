@@ -6,12 +6,13 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY src/ .
+COPY . .
 
-EXPOSE 5000
-
-ENV FLASK_APP=server.py
+ENV FLASK_APP=src.server:app
 ENV FLASK_ENV=development
 
-# Run app.py when the container launches
-CMD ["flask", "run", "--host=0.0.0.0"]
+# Expose port 5000
+EXPOSE 80
+
+# Run the Flask app
+CMD ["flask", "run", "--host=0.0.0.0:80"]
