@@ -3,7 +3,6 @@ from flask import Flask, request, jsonify
 from src.transfer import TransferCreator
 import os
 
-# Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 
 app = Flask(__name__)
