@@ -4,10 +4,36 @@ This application is hosted on Google Cloud Platform (GCP), running on an `e2-mic
 
 **Note:** When making an HTTPS request, you will notice that the server currently uses a **self-signed certificate**. While I used this approach on this challenge, I fully understand that self-signed certificates are not suitable for production systems. In a production environment, a valid certificate from a trusted Certificate Authority (CA), should always be used to ensure secure and trusted communication.
 
-The responsabilities of the application running on GCP are:
+The responsibilities of the application running on GCP are:
 1. Receive webhooks from external services.
 2. Create invoices at the specified time.
 3. Automatically process transfers when webhooks notify that invoices have been paid.
+
+## Running in Production
+
+To run this application in production, follow these steps:
+
+1. **Add a Private Key File**:  
+   You must add a `private-key.pem` file to the base folder of the repository. This file is required for authentication and secure communication.
+
+2. **Update Environment and Project ID**:  
+   You might also want to change the environment and project ID in the `src/StarkBankAuth.py` file to match your production settings.
+
+## Building and Running with Docker
+
+To build and run the application using Docker, follow these steps:
+
+1. **Build the Docker Image**:  
+   Use the following command to build the Docker image:  
+   ```sh
+   sudo docker build . -t smart-invoice-dispatcher
+   ```
+
+2. **Run the Docker Container**:  
+   To run the container in detached mode and map port 443, use the following command:  
+   ```sh
+   docker run -d -p 443:443 smart-invoice-dispatcher
+   ```
 
 ## Running Tests
 
