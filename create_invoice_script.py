@@ -13,7 +13,7 @@ def create_random_invoices():
     payload = {"amount": num_invoices}
     
     try:
-        response = requests.post(url, json=payload)
+        response = requests.post(url, json=payload, verify=False)
         
         if response.status_code == 200:
             logging.info(f"Successfully created {num_invoices} invoices: {response.json()}")
