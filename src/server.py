@@ -1,7 +1,6 @@
 import logging
 from flask import Flask, request, jsonify
 from src.transfer import TransferCreator
-from src.invoice_creator import InvoiceCreator
 import os
 
 # Set up logging
@@ -55,23 +54,6 @@ def create_transfer(amount):
     transfer_creator = TransferCreator()
     transfer_creator.create(amount)
 
-
-@app.route('/create-invoices', methods=['POST'])
-def create_invoices():
-    data = request.json
-    if not data or 'amount' not in data:
-        return jsonify({"error": "Missing 'amount' in request body"}), 400
-
-    amount = data['amount']
-    if not isinstance(amount, int) or amount <= 0:
-        return jsonify({"error": "'amount' must be a positive integer"}), 400
-
-    invoice_creator = InvoiceCreator()
-    try:
-        invoice_creator.create_invoices(amount)
-        return jsonify({"message": f"Successfully created {amount} invoices"}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     cert_file = 'server.crt'

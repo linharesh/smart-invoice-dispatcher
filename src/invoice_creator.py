@@ -11,11 +11,11 @@ logger = logging.getLogger(__name__)
 class InvoiceCreator:
 
     def generate_random_amount(self):
-        amount = random.randint(1, 10000000)
+        amount = random.randint(1, 500000)
         logger.info(f"Generated random amount: {amount}")
         return amount
 
-    def create_invoices(self, num_invoices=3):
+    def create_invoices(self, num_invoices=8):
         logger.info(f"Starting to create {num_invoices} invoices...")
         invoices = []
         tax_id_generator = TaxIdGenerator()

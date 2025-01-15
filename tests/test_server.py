@@ -71,32 +71,6 @@ class ServerTestCase(unittest.TestCase):
         create_transfer(100)
         mock_transfer_creator.create.assert_called_once_with(100)
 
-    def test_create_invoices_missing_amount(self):
-        response = self.app.post('/create-invoices', json={})
-        self.assertEqual(response.status_code, 400)
-        self.assertIn("Missing 'amount'", response.json["error"])
-
-    def test_create_invoices_invalid_amount(self):
-        response = self.app.post('/create-invoices', json={"amount": -1})
-        self.assertEqual(response.status_code, 400)
-        self.assertIn("'amount' must be a positive integer", response.json["error"])
-
-    @patch('src.server.InvoiceCreator')
-    def test_create_invoices_success(self, MockInvoiceCreator):
-        mock_invoice_creator = MockInvoiceCreator.return_value
-        response = self.app.post('/create-invoices', json={"amount": 5})
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Successfully created 5 invoices", response.json["message"])
-        mock_invoice_creator.create_invoices.assert_called_once_with(5)
-
-    @patch('src.server.InvoiceCreator')
-    def test_create_invoices_exception(self, MockInvoiceCreator):
-        mock_invoice_creator = MockInvoiceCreator.return_value
-        mock_invoice_creator.create_invoices.side_effect = Exception("Test exception")
-        response = self.app.post('/create-invoices', json={"amount": 5})
-        self.assertEqual(response.status_code, 500)
-        self.assertIn("Test exception", response.json["error"])
-
 if __name__ == '__main__':
     unittest.main()
 

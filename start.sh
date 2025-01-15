@@ -11,7 +11,7 @@ gunicorn src.server:app \
   --preload &
 
 # Start the Python script in the background
-python create_invoice_script.py &
+python create_invoice_job.py &
 
 # Wait for both processes to finish
 wait
