@@ -3,6 +3,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class NameGenerator:
     @staticmethod
     def generate_random_name():

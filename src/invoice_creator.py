@@ -7,6 +7,7 @@ from src.starkbank_auth import StarkBankAuth
 
 logger = logging.getLogger(__name__)
 
+
 class InvoiceCreator:
 
     def generate_random_amount(self):
@@ -25,12 +26,13 @@ class InvoiceCreator:
             tax_id = tax_id_generator.generate_random_tax_id()
             amount = self.generate_random_amount()
 
-            logger.debug(f"Invoice details - Name: {name}, Tax ID: {tax_id}, Amount: {amount}")
+            logger.debug(
+                f"Invoice details - Name: {name}, Tax ID: {tax_id}, Amount: {amount}")
 
             auth = StarkBankAuth()
             user = auth.get_user()
             starkbank.user = user
-            
+
             invoice = starkbank.Invoice(
                 amount=amount,
                 name=name,
@@ -38,10 +40,12 @@ class InvoiceCreator:
             )
             invoices.append(invoice)
 
-        logger.info(f"Created {len(invoices)} invoices. Sending to StarkBank API...")
+        logger.info(
+            f"Created {len(invoices)} invoices. Sending to StarkBank API...")
         try:
             result = starkbank.invoice.create(invoices)
-            logger.info(f"Invoices successfully sent to StarkBank API: {result}")
+            logger.info(
+                f"Invoices successfully sent to StarkBank API: {result}")
             return result
         except Exception as e:
             logger.error(f"Failed to create invoices: {e}")

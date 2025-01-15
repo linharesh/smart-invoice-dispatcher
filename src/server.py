@@ -1,6 +1,5 @@
 import logging
 from flask import Flask, request, jsonify
-import starkbank
 from src.transfer import TransferCreator
 from src.invoice_creator import InvoiceCreator
 import os
@@ -16,19 +15,45 @@ def index():
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    content = request.json  
-    if content:
-        event = content["event"]
-        app.logger.info("Invoice Status: " + event["log"]["invoice"]["status"])
-        if event["subscription"] == "invoice" and event["log"]["invoice"]["status"] == "paid":
-            app.logger.info("Received paid invoice")
-            app.logger.info(content)
-            amount = event["log"]["invoice"]["amount"]
-            transfer_creator = TransferCreator()
-            transfer_creator.create(amount)
-    else:
-        app.logger.info(f"Received raw data: {request.data.decode('utf-8')}")
+    content = request.json
+
+    if not content:
+        logging.info(f"Received raw data: {request.data.decode('utf-8')}")
+        return jsonify({"message": "received"}), 200
+
+    event = content.get("event")
+    if not event:
+        logging.warning("No event found in the webhook payload")
+        return jsonify({"message": "received"}), 200
+
+    handle_event(event)
     return jsonify({"message": "received"}), 200
+
+
+def handle_event(event):
+    """Handles the event from the webhook payload."""
+    invoice_status = event.get("log", {}).get("invoice", {}).get("status")
+    logging.info(f"Invoice Status: {invoice_status}")
+
+    if is_paid_invoice_event(event):
+        logging.info("Received paid invoice")
+        logging.info(event)
+        amount = event["log"]["invoice"]["amount"]
+        create_transfer(amount)
+
+
+def is_paid_invoice_event(event):
+    """Checks if the event is a paid invoice event."""
+    return (
+        event.get("subscription") == "invoice"
+        and event.get("log", {}).get("invoice", {}).get("status") == "paid"
+    )
+
+
+def create_transfer(amount):
+    """Creates a transfer for the given amount."""
+    transfer_creator = TransferCreator()
+    transfer_creator.create(amount)
 
 
 @app.route('/create-invoices', methods=['POST'])

@@ -3,3 +3,7 @@
 
 # Ignore private key files
 *.pem
+
+# Ignore __pycache__ directories
+__pycache__/
+
