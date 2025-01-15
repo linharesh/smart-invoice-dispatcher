@@ -11,8 +11,7 @@ class TransferCreator:
                branch_code="0001", account_number="6341320293482496", account_type="payment"):
         logger.info("Creating a new transfer...")
         logger.debug(
-            f"Transfer details - Amount: {
-                amount}, Name: {name}, Tax ID: {tax_id}, "
+            f"Transfer details - Amount: {amount}, Name: {name}, Tax ID: {tax_id}, "
             f"Bank Code: {bank_code}, Branch Code: {branch_code}, "
             f"Account Number: {account_number}, Account Type: {account_type}"
         )
